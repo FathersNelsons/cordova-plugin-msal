@@ -92,7 +92,6 @@
     {
         MSALGlobalConfig.brokerAvailability = MSALBrokeredAvailabilityNone;
     }
-    self.config.cacheConfig.keychainSharingGroup = @"DXW94LG9J8.com.fedins.fedonemobile.test";
     self.application = [[MSALPublicClientApplication alloc] initWithConfiguration:[self config] error:&msalError];
     self.scopes = [options objectForKey:@"scopes"];
     self.accountMode = [options objectForKey:@"accountMode"];

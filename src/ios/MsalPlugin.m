@@ -181,61 +181,44 @@
     }
     
     [MSALGlobalConfig.loggerConfig setLogCallback:^(MSALLogLevel level, NSString * _Nullable message, BOOL containsPII) {
-        NSMutableDictionary *logEntry = [[NSMutableDictionary alloc] initWithCapacity:6];
-        NSCharacterSet *separators = [NSCharacterSet characterSetWithCharactersInString:@" []"];
-        NSArray *messageData = [message componentsSeparatedByCharactersInSet:separators];
-        @try
-        {
-            NSString *timestamp = [[[messageData objectAtIndex:7] stringByAppendingString:@" "] stringByAppendingString:[messageData objectAtIndex:8]];
-            NSInteger threadId = [[[[messageData objectAtIndex:0] componentsSeparatedByString:@"="] objectAtIndex:1] intValue];
-            NSString *correlationId;
-            NSString *logLevel;
-            if (level == MSALLogLevelInfo)
-            {
-                logLevel = @"INFO";
-            }
-            else if (level == MSALLogLevelWarning)
-            {
-                logLevel = @"WARNING";
-            }
-            else if (level == MSALLogLevelError)
-            {
+    NSMutableDictionary *logEntry = [[NSMutableDictionary alloc] init];
+
+    @try
+    {
+        // Map the MSALLogLevel to a string
+        NSString *logLevel;
+        switch (level) {
+            case MSALLogLevelError:
                 logLevel = @"ERROR";
-            }
-            else
-            {
+                break;
+            case MSALLogLevelWarning:
+                logLevel = @"WARNING";
+                break;
+            case MSALLogLevelInfo:
+                logLevel = @"INFO";
+                break;
+            default:
                 logLevel = @"VERBOSE";
-            }
-            NSString *messageText;
-            
-            // The MSAL Log Text can be in one of two formats which changes how we have to parse it out.
-            if ([[messageData objectAtIndex:9] isEqualToString:@"-"])
-            {
-                correlationId = [messageData objectAtIndex:10];
-                messageText = [[message componentsSeparatedByString:@"[MSAL] "] objectAtIndex:1];
-            }
-            else
-            {
-                correlationId = @"UNSET";
-                messageText = [[message componentsSeparatedByString:@"] "] objectAtIndex:1];
-            }
-            
-            [logEntry setValue:timestamp forKey:@"timestamp"];
-            [logEntry setValue:[NSNumber numberWithInteger:threadId] forKey:@"threadId"];
-            [logEntry setValue:correlationId forKey:@"correlationId"];
-            [logEntry setValue:logLevel forKey:@"logLevel"];
-            [logEntry setValue:[NSNumber numberWithBool:containsPII] forKey:@"containsPII"];
-            [logEntry setValue:messageText forKey:@"message"];
-            
-            CDVPluginResult *logUpdate = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:logEntry];
-            [logUpdate setKeepCallbackAsBool:YES];
-            [self.commandDelegate sendPluginResult:logUpdate callbackId:command.callbackId];
+                break;
         }
-        @catch (NSException *ex)
-        {
-            // If the format of this log message is weird, just ignore it
-        }
-    }];
+
+        // Set the log level and whether it contains PII
+        [logEntry setValue:logLevel forKey:@"logLevel"];
+        [logEntry setValue:@(containsPII) forKey:@"containsPII"];
+
+        // Capture the entire message
+        [logEntry setValue:message forKey:@"message"];
+
+        // Send the log entry back to JavaScript
+        CDVPluginResult *logUpdate = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:logEntry];
+        [logUpdate setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:logUpdate callbackId:command.callbackId];
+    }
+    @catch (NSException *ex)
+    {
+        // Handle exceptions if necessary
+    }
+}];
 }
 
 - (void)signInSilent:(CDVInvokedUrlCommand*)command

@@ -93,13 +93,14 @@
                 <pod name="MSAL" />
             </pods>
         </podspec>
-        <edit-config target="CFBundleURLTypes" file="*-Info.plist" mode="merge">
+        <edit-config target="CFBundleURLTypes" file="*-Info.plist" mode="overwrite">
             <array>
                 <dict>
                     <key>CFBundleURLName</key>
                     <string>$PACKAGE_NAME</string>
                     <key>CFBundleURLSchemes</key>
                     <array>
+                        <string>$PACKAGE_NAME</string>
                         <string>msauth.$PACKAGE_NAME</string>
                     </array>
                 </dict>

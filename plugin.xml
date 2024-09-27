@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-msal" version="4.1.1">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-msal" version="4.1.1">
     <name>Cordova MSAL Plugin</name>
-    <description>A Cordova plugin providing a wrapper for Microsoft's MSAL library for Android and iOS.</description>
+    <description>A Cordova plugin providing a wrapper for Microsoft's MSAL library for Android and
+        iOS.</description>
     <author>Walter Robins</author>
     <keywords>cordova,android,outsystems,ios,microsoft,msal,azure,graphapi,authentication</keywords>
     <license>Apache 2.0</license>
     <repo>https://github.com/FathersNelsons/cordova-plugin-msal.git</repo>
     <issue>https://github.com/FathersNelsons/cordova-plugin-msal/issues</issue>
     <engines>
-        <engine name="cordova-android" version=">=12.0.0"/>
-        <engine name="cordova-ios" version=">=7.0.0"/>
-        <engine name="cordova-browser" version=">=6.0.0"/>
-    </engines> 
+        <engine name="cordova-android" version=">=12.0.0" />
+        <engine name="cordova-ios" version=">=7.0.0" />
+        <engine name="cordova-browser" version=">=6.0.0" />
+    </engines>
     <js-module src="www/msalplugin.js" name="msalPlugin">
         <clobbers target="cordova.plugins.msalPlugin" />
     </js-module>
@@ -26,8 +27,8 @@
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
-            <uses-permission android:name="android.permission.INTERNET "/>
-            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE "/>
+            <uses-permission android:name="android.permission.INTERNET " />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE " />
         </config-file>
         <config-file target="AndroidManifest.xml" parent="application">
             <activity android:exported="true"
@@ -86,20 +87,15 @@
         </config-file>
         <podspec>
             <config>
-                <source url="https://cdn.cocoapods.org/"/>
+                <source url="https://cdn.cocoapods.org/" />
             </config>
             <pods use_frameworks="true">
                 <pod name="MSAL" />
             </pods>
         </podspec>
-        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+        <config-file target="*-Info.plist" parent="CFBundleURLSchemes">
             <array>
-                <dict>
-                    <key>CFBundleURLSchemes</key>
-                    <array>
-                        <string>msauth.$PACKAGE_NAME</string>
-                    </array>
-                </dict>
+                <string>msauth.$PACKAGE_NAME</string>
             </array>
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
@@ -128,15 +124,15 @@
     </platform>
     <platform name="browser">
         <config-file target="config.xml" parent="/*">
-          <feature name="MsalPlugin">
-            <param name="browser-package" value="MsalPlugin" />
-          </feature>
+            <feature name="MsalPlugin">
+                <param name="browser-package" value="MsalPlugin" />
+            </feature>
         </config-file>
         <js-module src="src/browser/msal-browser.min.js" name="Msal">
             <merges target="msal" />
         </js-module>
         <js-module src="src/browser/MsalProxy.js" name="MsalProxy">
-          <runs />
+            <runs />
         </js-module>
-      </platform>
+    </platform>
 </plugin>

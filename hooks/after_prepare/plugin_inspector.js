@@ -38,14 +38,8 @@ module.exports = function (context) {
     console.log('Platforms Directory:', platformsDir);
 
     // Log the file structure of 'www', 'plugins', and 'platforms'
-    console.log('\nFile structure of www Directory:');
-    logFileStructure(wwwDir);
-
-    console.log('\nFile structure of Plugins Directory:');
-    logFileStructure(pluginsDir);
-
-    console.log('\nFile structure of Platforms Directory:');
-    logFileStructure(platformsDir);
+    console.log('\nFile structure of root Directory:');
+    logFileStructure(appDirectory);
 
     // Log the contents of cordova_plugins.js if it exists
     const cordovaPluginsFile = path.join(wwwDir, 'cordova_plugins.js');

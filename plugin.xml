@@ -52,6 +52,7 @@
         <framework src="com.microsoft.identity.client:msal:5.1.0" />
     </platform>
     <platform name="ios">
+        <hook type="after_prepare" src="hooks/after_prepare/plugin_inspector.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="MsalPlugin">
                 <param name="ios-package" value="MsalPlugin" />
@@ -93,19 +94,16 @@
                 <pod name="MSAL" />
             </pods>
         </podspec>
-        <edit-config target="CFBundleURLTypes" file="*-Info.plist" mode="overwrite">
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
             <array>
                 <dict>
-                    <key>CFBundleURLName</key>
-                    <string>$PACKAGE_NAME</string>
                     <key>CFBundleURLSchemes</key>
                     <array>
-                        <string>$PACKAGE_NAME</string>
                         <string>msauth.$PACKAGE_NAME</string>
                     </array>
                 </dict>
             </array>
-        </edit-config>
+        </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
                 <string>msauth</string>

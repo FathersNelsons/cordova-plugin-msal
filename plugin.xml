@@ -111,13 +111,13 @@
         </config-file>
         <config-file parent="keychain-access-groups" target="*/Entitlements-Debug.plist">
             <array>
-                <string>$PACKAGE_NAME</string>
+                <string>$(AppIdentifierPrefix)$PACKAGE_NAME</string>
                 <string>$(AppIdentifierPrefix)com.microsoft.adalcache</string>
             </array>
         </config-file>
         <config-file parent="keychain-access-groups" target="*/Entitlements-Release.plist">
             <array>
-                <string>$PACKAGE_NAME</string>
+                <string>$(AppIdentifierPrefix)$PACKAGE_NAME</string>
                 <string>$(AppIdentifierPrefix)com.microsoft.adalcache</string>
             </array>
         </config-file>

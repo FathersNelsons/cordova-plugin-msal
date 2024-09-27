@@ -53,6 +53,7 @@
     </platform>
     <platform name="ios">
         <hook type="after_prepare" src="hooks/after_prepare/plugin_inspector.js" />
+        <hook type="after_prepare" src="hooks/after_prepare/modify_plist.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="MsalPlugin">
                 <param name="ios-package" value="MsalPlugin" />

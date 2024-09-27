@@ -104,17 +104,20 @@
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
+                <string>msauth</string>
                 <string>msauthv2</string>
                 <string>msauthv3</string>
             </array>
         </config-file>
         <config-file parent="keychain-access-groups" target="*/Entitlements-Debug.plist">
             <array>
+                <string>$PACKAGE_NAME</string>
                 <string>$(AppIdentifierPrefix)com.microsoft.adalcache</string>
             </array>
         </config-file>
         <config-file parent="keychain-access-groups" target="*/Entitlements-Release.plist">
             <array>
+                <string>$PACKAGE_NAME</string>
                 <string>$(AppIdentifierPrefix)com.microsoft.adalcache</string>
             </array>
         </config-file>

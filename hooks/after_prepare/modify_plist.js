@@ -40,11 +40,14 @@ module.exports = function (context) {
             if (!plistJson.CFBundleURLTypes[i].CFBundleTypeRole) {
                 plistJson.CFBundleURLTypes[i].CFBundleTypeRole = newUrlScheme.CFBundleTypeRole;
             }
-            // Update the existing entry with the new URL schemes (avoid duplicates)
-            plistJson.CFBundleURLTypes[i].CFBundleURLSchemes = Array.from(new Set([
-                ...plistJson.CFBundleURLTypes[i].CFBundleURLSchemes,
+
+            // Use Set to eliminate duplicates both in existing and new schemes
+            const mergedSchemes = new Set([
+                ...plistJson.CFBundleURLTypes[i].CFBundleURLSchemes || [],
                 ...newUrlScheme.CFBundleURLSchemes
-            ]));
+            ]);
+
+            plistJson.CFBundleURLTypes[i].CFBundleURLSchemes = Array.from(mergedSchemes);
             updated = true;
             break;
         }

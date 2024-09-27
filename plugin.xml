@@ -93,11 +93,18 @@
                 <pod name="MSAL" />
             </pods>
         </podspec>
-        <config-file target="*-Info.plist" parent="CFBundleURLSchemes">
+        <edit-config target="CFBundleURLTypes" file="*-Info.plist" mode="merge">
             <array>
-                <string>msauth.$PACKAGE_NAME</string>
+                <dict>
+                    <key>CFBundleURLName</key>
+                    <string>$PACKAGE_NAME</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>msauth.$PACKAGE_NAME</string>
+                    </array>
+                </dict>
             </array>
-        </config-file>
+        </edit-config>
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
                 <string>msauth</string>

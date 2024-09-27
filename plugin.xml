@@ -89,7 +89,7 @@
             <config>
                 <source url="https://cdn.cocoapods.org/" />
             </config>
-            <pods use_frameworks="true">
+            <pods use_frameworks="false">
                 <pod name="MSAL" />
             </pods>
         </podspec>

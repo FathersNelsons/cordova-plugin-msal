@@ -31,25 +31,38 @@ module.exports = function (context) {
             CFBundleURLSchemes: [appBundleId, `msauth.${appBundleId}`]  // Your schemes
         };
 
+        // Function to check for duplicates
+        const mergeSchemes = (existingSchemes, newSchemes) => {
+            newSchemes.forEach(scheme => {
+                if (!existingSchemes.includes(scheme)) {
+                    existingSchemes.push(scheme);
+                }
+            });
+            return existingSchemes;
+        };
+
         // Check if the CFBundleURLName already exists in the array
         let updated = false;
         for (let i = 0; i < plistJson.CFBundleURLTypes.length; i++) {
-            if (!plistJson.CFBundleURLTypes[i].CFBundleURLName) {
-                plistJson.CFBundleURLTypes[i].CFBundleURLName = newUrlScheme.CFBundleURLName;
-            }
-            if (!plistJson.CFBundleURLTypes[i].CFBundleTypeRole) {
-                plistJson.CFBundleURLTypes[i].CFBundleTypeRole = newUrlScheme.CFBundleTypeRole;
-            }
+            const urlType = plistJson.CFBundleURLTypes[i];
 
-            // Use Set to eliminate duplicates both in existing and new schemes
-            const mergedSchemes = new Set([
-                ...plistJson.CFBundleURLTypes[i].CFBundleURLSchemes || [],
-                ...newUrlScheme.CFBundleURLSchemes
-            ]);
+            if (urlType.CFBundleURLName === appBundleId) {
+                // Ensure that CFBundleURLSchemes is initialized
+                if (!urlType.CFBundleURLSchemes) {
+                    urlType.CFBundleURLSchemes = [];
+                }
 
-            plistJson.CFBundleURLTypes[i].CFBundleURLSchemes = Array.from(mergedSchemes);
-            updated = true;
-            break;
+                // Merge schemes, ensuring no duplicates
+                urlType.CFBundleURLSchemes = mergeSchemes(urlType.CFBundleURLSchemes, newUrlScheme.CFBundleURLSchemes);
+
+                // Update CFBundleTypeRole (if needed)
+                if (!urlType.CFBundleTypeRole) {
+                    urlType.CFBundleTypeRole = newUrlScheme.CFBundleTypeRole;
+                }
+
+                updated = true;
+                break;
+            }
         }
 
         // If not updated, add a new entry

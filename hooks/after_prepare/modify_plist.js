@@ -5,7 +5,7 @@ const plist = require('plist');  // Requires the plist package to handle .plist 
 
 module.exports = function(context) {
     const iosPlatformPath = path.join(context.opts.projectRoot, 'platforms', 'ios');
-    const appName = getAppName(iosPlatformPath);
+    const appName = getAppName();
     const plistFilePath = path.join(iosPlatformPath, appName, `${appName}-Info.plist`);
 
     console.log(`Modifying Info.plist at: ${plistFilePath}`);
@@ -43,8 +43,8 @@ module.exports = function(context) {
 };
 
 // Helper function to get the app name
-function getAppName(iosPlatformPath) {
-    const configXmlPath = path.join(iosPlatformPath, '..', 'config.xml');
+function getAppName() {
+    const configXmlPath = path.join(context.opts.projectRoot, 'config.xml');
     const configData = fs.readFileSync(configXmlPath, 'utf8');
     const appNameMatch = configData.match(/<name>([^<]+)<\/name>/);
     return appNameMatch ? appNameMatch[1].trim() : null;

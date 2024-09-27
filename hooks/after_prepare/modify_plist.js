@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const plist = require('plist');  // Requires the plist package to handle .plist files
 
-module.exports = function(context) {
+module.exports = function (context) {
     const rootPath = context.opts.projectRoot;
     const iosPlatformPath = path.join(rootPath, 'platforms', 'ios');
     const appName = getAppName(rootPath);
@@ -15,7 +15,6 @@ module.exports = function(context) {
         // Read the existing Info.plist
         const plistData = fs.readFileSync(plistFilePath, 'utf8');
         const plistJson = plist.parse(plistData);
-        console.log(`Readout of JSON-ified Info.plist: ${plistJson}`);
 
         // Get the app bundle ID from the plist file
         const appBundleId = plistJson.CFBundleIdentifier;
@@ -25,14 +24,38 @@ module.exports = function(context) {
             plistJson.CFBundleURLTypes = [];
         }
 
-        // Define the new URL scheme you want to add
+        // Define the new URL scheme entry
         const newUrlScheme = {
-            CFBundleURLName: `${appBundleId}`, // Change this to your app's bundle ID
-            CFBundleURLSchemes: [`${appBundleId}`, `msauth.${appBundleId}`]  // Replace with your custom scheme
+            CFBundleTypeRole: 'Editor',  // Add the CFBundleTypeRole key
+            CFBundleURLName: appBundleId,  // Use the app bundle ID
+            CFBundleURLSchemes: [appBundleId, `msauth.${appBundleId}`]  // Your schemes
         };
 
-        // Overwrite
-        plistJson.CFBundleURLTypes.push(newUrlScheme);
+        // Check if the CFBundleURLName already exists in the array
+        let updated = false;
+        for (let i = 0; i < plistJson.CFBundleURLTypes.length; i++) {
+            if (!plistJson.CFBundleURLTypes[i].CFBundleURLName) {
+                plistJson.CFBundleURLTypes[i].CFBundleURLName = newUrlScheme.CFBundleURLName;
+            }
+            if (!plistJson.CFBundleURLTypes[i].CFBundleTypeRole) {
+                plistJson.CFBundleURLTypes[i].CFBundleTypeRole = newUrlScheme.CFBundleTypeRole;
+            }
+            // Update the existing entry with the new URL schemes (avoid duplicates)
+            plistJson.CFBundleURLTypes[i].CFBundleURLSchemes = Array.from(new Set([
+                ...plistJson.CFBundleURLTypes[i].CFBundleURLSchemes,
+                ...newUrlScheme.CFBundleURLSchemes
+            ]));
+            updated = true;
+            break;
+        }
+
+        // If not updated, add a new entry
+        if (!updated) {
+            plistJson.CFBundleURLTypes.push(newUrlScheme);
+            console.log('Added new URL scheme.');
+        } else {
+            console.log('Updated existing URL scheme.');
+        }
 
         // Write the updated Info.plist back to disk
         const updatedPlistData = plist.build(plistJson);
